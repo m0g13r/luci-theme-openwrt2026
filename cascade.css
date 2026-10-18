@@ -8,12 +8,29 @@
 	--success-color: #ADD0AD;
 	--regular-font: "GalanoGrotesqueW00-Regular";
 	--base-font-size: 16px;
-	--table-background-color: #f5f5f5;
+	--table-background-color: #f1f2f3;
+	--page-bg: #fafafa;
+	--page-text: #333;
+	--surface-color: #fafafa;
+	--hover-row-color: rgba(56, 64, 76, .07);
+	--glass-border: rgba(56, 64, 76, .14);
+	--glass-shadow: 0 1px 2px rgba(20, 30, 50, .05), 0 12px 28px -14px rgba(20, 30, 50, .18);
+	--glow-1: rgba(80, 130, 200, .14);
+	--glow-2: rgba(130, 100, 210, .10);
+	--zone-border: rgba(0, 0, 0, .08);
+	--zone-sheen: rgba(255, 255, 255, .55);
+	--badge-gloss: rgba(255, 255, 255, .55);
+	--pb-track: rgba(56, 64, 76, .13);
+	--pb-fill: var(--main-bright-color);
+	--pb-text: #1d2a36;
+	--pb-halo: rgba(255, 255, 255, .85);
+	--pb-shadow: inset 0 1px 3px rgba(0, 0, 0, .2), inset 0 0 0 1px rgba(0, 0, 0, .05), 0 1px 0 rgba(255, 255, 255, .55);
 }
 
 @font-face {
  	font-family: "GalanoGrotesqueW00-Regular";
  	src: url("GalanoGrotesqueW00-Regular.woff2") format("woff2");
+ 	font-display: swap;
 }
 
 :root[lang="bg"], :root[lang="ru"], :root[lang="uk"], :root[lang="el"], :root[lang="he"] {
@@ -36,7 +53,8 @@
 	font-size: 100%;
 	background: none;
 	outline: none;
-	-webkit-appearance: none;
+	-webkit-appearance: none; /* nonstandard, should remove in future */
+	appearance: none;
 	-webkit-text-size-adjust: none;
 }
 
@@ -49,8 +67,12 @@ html {
 }
 
 body {
-	background: var(--secondary-bright-color);
-	color: var(--secondary-dark-color);
+	background:
+		radial-gradient(60rem 40rem at 85% -10%, var(--glow-1), transparent 60%),
+		radial-gradient(50rem 35rem at -10% 110%, var(--glow-2), transparent 60%),
+		var(--page-bg);
+	background-attachment: fixed;
+	color: var(--page-text);
 	font-size: var(--base-font-size);
 	cursor: default;
 	display: inline-flex;
@@ -191,7 +213,7 @@ abbr[title], acronym[title] {
 #mainmenu li > ul {
 	max-height: 0;
 	overflow: hidden;
-	transition: max-height .1s ease-in-out;
+	transition: max-height .25s ease-in-out;
 	margin-left: 1.5em;
 }
 
@@ -207,7 +229,7 @@ abbr[title], acronym[title] {
 #mainmenu ul:not(.active) > li.selected > ul,
 #mainmenu li.active > ul {
 	max-height: 3000px;
-	transition: max-height 1s ease-in-out;
+	transition: max-height .3s ease-in-out;
 	margin: 0 0 .5em 1.5em;
 }
 
@@ -642,22 +664,6 @@ abbr[title], acronym[title] {
 	--menu-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='5' cy='5' r='2'/%3E%3Ccircle cx='15' cy='5' r='2'/%3E%3Ccircle cx='10' cy='15' r='2'/%3E%3Cline x1='6.5' y1='6.5' x2='9' y2='13'/%3E%3Cline x1='13.5' y1='6.5' x2='11' y2='13'/%3E%3C/svg%3E");
 }
 
-/*
- * Diese Regeln stehen bewusst hier unten (nach den generischen
- * Ein-Wort-Selektoren wie [href*="vpn" i], [href*="wall" i],
- * [href*="guard" i], [href*="modem" i], [href*="statistics" i],
- * [href*="log" i], [href*="overview" i]). Da alle diese Selektoren
- * die gleiche Spezifität haben, gewinnt in CSS bei einem Treffer
- * immer die zuletzt im Dokument stehende Regel. Ohne diese
- * Verschiebung würden z. B. "admin/vpn" (enthält "vpn"),
- * "firewall" (enthält "wall"), "wireguard" (enthält "guard"),
- * "admin/modem" (enthält "modem"), "admin/statistics" (enthält
- * "statistics"), "logout" (enthält "log") und
- * "admin/status/overview" (enthält "overview") ihr eigentlich
- * vorgesehenes, spezifischeres Icon verlieren und stattdessen das
- * generische Icon des Teilstring-Treffers bekommen.
- */
-
 #mainmenu a[href$="admin/status"],
 #mainmenu a[href$="admin/"],
 #mainmenu a[href*="admin/status/overview"] {
@@ -945,6 +951,8 @@ body.modal-overlay-active #modal_overlay {
 	left: -10000px;
 	right: 10000px;
 	background: rgba(0, 0, 0, 0.7);
+	-webkit-backdrop-filter: blur(2px);
+	backdrop-filter: blur(2px);
 	z-index: 10000;
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
@@ -956,7 +964,7 @@ body.modal-overlay-active #modal_overlay {
 	max-width: 1300px;
 	width: 80%;
 	margin: 10% auto 5rem auto;
-	background: var(--secondary-bright-color);
+	background: var(--surface-color);
 	box-shadow: 0 0 3px 1px var(--main-bright-color);
 	padding: .5em;
 	border-radius: .25em;
@@ -978,6 +986,19 @@ body.modal-overlay-active #modal_overlay {
 
 .modal .cbi-section > legend:first-child { font-size: 120%; }
 
+.modal .button-row {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+
+.modal .button-row > :not(:last-child) {
+	margin-right: .5em;
+}
+
+.modal .button-row > :first-child {
+	margin-right: auto;
+}
 
 /*
  * table layout
@@ -1062,12 +1083,14 @@ tr.placeholder > td {
   position: relative;
   display: table;
 	margin: 0 0 1rem 0;
-	border:  1px solid var(--main-bright-color);
-	border-radius: .50em;
-	background: var(--table-background-color);
+	border: 1px solid var(--glass-border);
+	border-radius: 1em;
+	background: color-mix(in srgb, var(--table-background-color) 70%, transparent);
+	-webkit-backdrop-filter: blur(12px) saturate(140%);
+	backdrop-filter: blur(12px) saturate(140%);
    width: 100%;
 	font-size: 90%;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: var(--glass-shadow);
 }
 .tr {
   display: table-row;
@@ -1291,7 +1314,9 @@ tr.placeholder > td {
 	vertical-align: middle !important;
 }
 
-.nowrap {
+.nowrap:not(span) {
+/*	Sometimes you need to wrap: badges on narrow screens look weird 
+	and nowrap defeats other width constraints, so exclude span */
 	white-space: nowrap !important;
 }
 
@@ -1398,22 +1423,50 @@ p > a {
 .ifacebox, .ifacebadge, .zonebadge {
 	display: inline-flex;
 	line-height: 1.8em;
-	padding: 0 .25em;
 	margin: .25em;
-	border:  1px solid var(--main-bright-color);
 	font-size: .9em;
-	border-radius: .5em;
 	overflow: hidden;
 	font-size: .8rem;
 	vertical-align: text-top;
-	background: var(--secondary-bright-color);
+	background: var(--surface-color);
 	align-items: center;
-	color: var(--secondary-dark-color);
 	vertical-align: middle;
+}
+
+.ifacebox, .ifacebadge {
+	color: var(--secondary-dark-color);
+}
+
+.zonebadge {
+	position: relative;
+	padding: 0 .8em 0 1.7em;
+	border: 1px solid var(--zone-border);
+	border-radius: 999px;
+	/* die per JS gesetzte Zonenfarbe bleibt, wird nur aufgehellt = durchscheinender Farbton */
+	background-image: linear-gradient(var(--zone-sheen), var(--zone-sheen));
+	color: var(--page-text);
+}
+
+/* Statuspunkt in kräftiger Variante der Zonenfarbe */
+.zonebadge::before {
+	content: "";
+	position: absolute;
+	left: .75em;
+	top: 50%;
+	width: .5em;
+	height: .5em;
+	margin-top: -.25em;
+	border-radius: 50%;
+	background: inherit;
+	background-image: none;
+	filter: saturate(2.4) brightness(.72);
 }
 
 .zonebadge > .ifacebadge {
 	margin: .125em -.125em .125em .35em;
+	padding: 0 .25em;
+	border-radius: .5em;
+	background-image: none;
 }
 
 .zonebadge > .ifacebadge > img
@@ -1428,8 +1481,12 @@ p > a {
 	text-align: center;
 	width: 100%;
 	max-width: 150px;
-	background: var(--table-background-color);
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+	border: 1px solid var(--glass-border);
+	border-radius: 1em;
+	background: color-mix(in srgb, var(--table-background-color) 70%, transparent);
+	-webkit-backdrop-filter: blur(12px) saturate(140%);
+	backdrop-filter: blur(12px) saturate(140%);
+	box-shadow: var(--glass-shadow);
 }
 
 .ifacebox-head {
@@ -1443,10 +1500,19 @@ p > a {
 	white-space: nowrap;
 }
 
+#cbi-network-interface .ifacebox img {
+	width: 32px;
+	height: 32px;
+}
+
 .ifacebadge {
 	display: inline-flex;
 	align-items: center;
-	background: var(--secondary-bright-color);
+	padding: .1em 1em;
+	border: 1px solid var(--main-bright-color);
+	border-radius: .8em;
+	background: var(--surface-color);
+	background-image: linear-gradient(180deg, var(--badge-gloss), rgba(255, 255, 255, 0) 80%);
 }
 
 .ifacebadge.large {
@@ -1456,7 +1522,8 @@ p > a {
 .ifacebadge > img {
 	vertical-align: text-bottom;
 	margin: .25em;
-	height: 16px;
+	height: 24px;
+	width: 24px;
 }
 
 .ifacebadge > * {
@@ -1523,40 +1590,63 @@ p > a {
 .zone-forwards {
 	display: flex;
 	align-items: center;
+	flex-wrap: nowrap;
+}
+
+.zone-forwards > * {
+	text-wrap: auto;
+}
+
+/* Graph-Wrapper (vnStat/Statistik): graphs_vn.js / graphs_st.js setzen Inline-Styles,
+   daher !important. Gematcht wird über die Struktur, nicht über den Style-Text. */
+div:has(> img[data-iface]),
+div[data-plugin] > div:has(> img) {
+	border: 1px solid var(--glass-border) !important;
+	border-radius: 1em !important;
+	box-shadow: var(--glass-shadow) !important;
 }
 
 .cbi-progressbar {
-	background: var(--secondary-bright-color);
-	border-radius: .75em;
+	background: var(--pb-track);
+	border-radius: 999px;
 	position: relative;
 	min-width: 20rem;
-	height: 1.5em;
-	border:  1px solid var(--main-bright-color);
+	height: 1rem;
+	border: none;
 	overflow: hidden;
 	margin: .125rem 0;
+	box-shadow: var(--pb-shadow);
 }
 
 .cbi-progressbar > div {
-	background: var(--main-bright-color);
-	height: 65%;
+	background: var(--pb-fill);
+	height: 100%;
 	transition: width .25s ease-in-out;
 	width: 0%;
-	max-width: 99.2%;
-	border-radius: .75em;
-   margin: 3px 0px 3px 4px;
+	max-width: 100%;
+	border-radius: 999px;
+	margin: 0;
 }
 
+/* Text: exakt mittig (horizontal und vertikal) */
 .cbi-progressbar::after {
 	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	bottom: 0;
 	top: 0;
 	right: 0;
 	left: 0;
+	padding: 0;
 	text-align: center;
-	text-shadow: 0 0 2px var(--secondary-bright-color);
+	font-size: .7rem;
+	font-weight: 600;
+	color: var(--pb-text);
+	text-shadow: 0 0 3px var(--pb-halo), 0 0 3px var(--pb-halo), 0 0 6px var(--pb-halo);
 	content: attr(title);
 	white-space: nowrap;
-	line-height: 1.3em;
+	line-height: 1;
 }
 
 .cbi-tabmenu {
@@ -1626,19 +1716,28 @@ p > a {
 }
 
 .alert-message.info {
+	color: var(--secondary-bright-color);
 	background: var(--main-bright-color);
 }
 
 .alert-message.warning {
+	color: var(--secondary-bright-color);
 	background: var(--warning-color);
 }
 
 .alert-message.danger {
+	color: var(--secondary-bright-color);
 	background: var(--danger-color);
 }
 
 .alert-message.success {
+	color: var(--main-dark-color);
 	background: var(--success-color);
+}
+
+.alert-message.notice {
+	color: var(--main-bright-color);
+	background: var(--surface-color);
 }
 
 .alert-message .btn {
@@ -1648,6 +1747,17 @@ p > a {
 
 .alert-message .btn:hover {
 	box-shadow: 0 0 4px 1px var(--secondary-bright-color);
+}
+
+/* Fix for table text in notifications */
+.alert-message.notice table,
+.alert-message.notice .table,
+.alert-message.notice td,
+.alert-message.notice th,
+.alert-message.notice .td,
+.alert-message.notice .th {
+	color: var(--main-bright-color) !important;
+	background: transparent !important;
 }
 
 @keyframes fade-in {
@@ -1689,15 +1799,34 @@ button, .btn {
 	background: var(--main-bright-color);
 	color: var(--secondary-bright-color);
 	line-height: 1.5em;
-	border-radius: .75em;
 	cursor: pointer;
-	padding: 0 .5em;
 	display: inline-block;
 }
 
 button:hover, .btn:hover {
 	color: white;
-	box-shadow: 0 0 3px var(--main-bright-color), 0 0 6px var(--main-dark-color);
+}
+
+/* Form, Glanz und Hover/Klick-Verhalten der Buttons. Dropdown-Buttons haben
+   eine eigene Regel (.cbi-dropdown.btn), damit sich die aufgeklappte Liste
+   beim Hover nicht verschiebt. */
+:is(button, .btn, .cbi-button):not(.cbi-dropdown) {
+	border-radius: 1.25em;
+	padding: .15em 1.15em;
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, .20), rgba(255, 255, 255, 0) 70%);
+	transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+:is(button, .btn, .cbi-button):not(.cbi-dropdown):hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 14px -6px rgba(20, 30, 50, .55);
+	filter: brightness(1.06);
+}
+
+:is(button, .btn, .cbi-button):not(.cbi-dropdown):active {
+	transform: translateY(0) scale(.97);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, .28);
+	filter: brightness(.95);
 }
 
 button + button, .btn + .btn, button + .btn, .btn + button, select + button {
@@ -1847,8 +1976,9 @@ input[type="checkbox"] {
 }
 
 select {
-	padding: .1rem;
-	-webkit-appearance: menulist;
+	padding: .1rem 0;
+	-webkit-appearance: menulist; /* nonstandard, should remove in future */
+	appearance: menulist;
 }
 
 textarea {
@@ -1951,9 +2081,11 @@ textarea:focus {
 	position: relative;
 	overflow: hidden;
 	transition: box-shadow .25s ease-in-out;
-	pointer-events: none;
+	pointer-events: auto; /* needed for drag-and-drop in UIDynamicList */
 	flex: 1 1 100%;
 	word-break: break-all;
+	cursor: move; /* drag-and-drop */
+	user-select: text; /* text selection in drag-and-drop */
 }
 
 .cbi-dynlist > .item::after {
@@ -1974,6 +2106,20 @@ textarea:focus {
 	pointer-events: all;
 }
 
+/* indication line for drag-and-drop in UIDynamicList*/
+.cbi-dynlist > .item.drag-over {
+	border-top: 1px solid black;
+}
+
+/* Make item being dragged in UIDynamicList partially transparent*/
+.cbi-dynlist > .item.dragging {
+	opacity: 0.5;
+}
+/* prevent pointer changing when over the span element in UIDynamicList */
+.cbi-dynlist > .item > span {
+	pointer-events: none;
+}
+
 .cbi-dynlist[disabled] > .item::after {
 	pointer-events: none;
 }
@@ -1987,6 +2133,16 @@ textarea:focus {
 	display: flex;
 }
 
+/* indication line for drag-and-drop in UIDynamicList*/
+.cbi-dynlist > .add-item > .cbi-input-text.drag-over {
+	border-top: 1px solid black;
+}
+
+/* indication line for drag-and-drop in UIDynamicList*/
+.cbi-dynlist > .add-item > .cbi-button-add.drag-over {
+	border-top: 1px solid black;
+}
+
 .cbi-dynlist > .add-item > input {
 	flex: 1;
 	min-width: 18.5rem;
@@ -1996,6 +2152,7 @@ textarea:focus {
 .cbi-dynlist > .add-item > .btn {
 	flex: 0 0 1.6rem;
 	margin: 0 0 2px -1px;
+	padding: 0;
 	width: 1.6rem;
 	text-align: center;
 }
@@ -2011,6 +2168,30 @@ textarea:focus {
 
 .cbi-dropdown:not(.btn):not(.cbi-button) {
 	box-shadow: inset 0 0 1px var(--main-dark-color);
+}
+
+/* Anheben/Eindrücken über top statt transform/filter: erzeugt keinen neuen
+   Stacking-Kontext, die aufgeklappte Liste bleibt oben. */
+.cbi-dropdown.btn {
+	border-radius: 1.25em;
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, .20), rgba(255, 255, 255, 0) 70%);
+	transition: top .15s ease, box-shadow .15s ease;
+}
+
+.cbi-dropdown.btn:hover {
+	top: -1px;
+	box-shadow: 0 6px 14px -6px rgba(20, 30, 50, .55);
+}
+
+.cbi-dropdown.btn:active {
+	top: 0;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, .28);
+}
+
+.cbi-dropdown img {
+	/* the following are necessary to constrain (vector) images of any size */
+	max-height: 1.6em;  /* Adjusts image height to fit slightly larger than text line height */
+	width: auto;  /* Preserves aspect ratio */
 }
 
 .cbi-dropdown > ul {
@@ -2109,7 +2290,7 @@ textarea:focus {
 .cbi-dropdown > ul > li input[type="text"] {
 	margin: .25em 0;
 	border: none;
-	background: var(--secondary-bright-color);
+	background: var(--surface-color);
 }
 
 .cbi-dropdown[open] {
@@ -2118,7 +2299,7 @@ textarea:focus {
 
 .cbi-dropdown[open] > ul.dropdown {
 	display: block;
-	background: #fff;
+	background: var(--surface-color);
 	box-shadow: 0 0 1px var(--main-dark-color), 0 0 4px rgba(0, 0, 0, .7);
 	position: absolute;
 	z-index: 1100;
@@ -2157,7 +2338,8 @@ textarea:focus {
 	color: var(--secondary-bright-color);
 }
 
-.cbi-dropdown[open] > ul.dropdown > li.focus {
+.cbi-dropdown[open] > ul.dropdown > li.focus,
+.cbi-dropdown[open] > ul.dropdown > li:hover {
 	background: var(--main-bright-color);
 }
 
@@ -2379,6 +2561,12 @@ button.spinning::before, .btn.spinning::before {
 	background: var(--success-color);
 }
 
+.label.notice {
+	background:var(--secondary-bright-color);
+	color:var(--main-bright-color);
+	border: 1px solid var(--main-bright-color);
+}
+
 ul.deps {
 	margin: 0;
 	padding: 0;
@@ -2553,7 +2741,7 @@ ul.errors {
 		top: 0;
 		bottom: 0;
 		display: block;
-		background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--secondary-bright-color) 90%);
+		background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--page-bg) 90%);
 	}
 
 	[data-page="admin-status-overview"] .cbi-section:nth-of-type(1) td:first-of-type,
@@ -2734,7 +2922,7 @@ ul.errors {
 		line-height: 1rem;
 	}
 
-	[data-page="admin-system-opkg"] .control-group {
+	[data-page="admin-system-package-manager"] .control-group {
 		flex-wrap: wrap;
 	}
 
@@ -2747,5 +2935,139 @@ ul.errors {
 @media only screen and (min-width: 800px) and (max-width: 1200px) {
 	.assoclist tr > *:nth-of-type(2) {
 		display: none;
+	}
+}
+
+@media screen and (max-width: 480px) {
+  body[data-page='admin-status-overview'] h3, .cbi-section > legend:first-child {
+    line-height: 2em;
+  }
+}
+
+body[data-page='admin-status-overview'] .cbi-title .label.notice {
+  background: var(--main-bright-color);
+  color: var(--secondary-bright-color);
+  border: 0;
+}
+
+body[data-page='admin-status-overview'] .cbi-title .label {
+  background: var(--surface-color);
+  color: var(--main-bright-color);
+  border: 1px solid var(--main-bright-color);
+  opacity: 1;
+  cursor: pointer;
+}
+
+body[data-page='admin-status-overview'] .cbi-title .label.notice {
+ opacity: 0.7;
+}
+
+body[data-page='admin-status-overview'] .cbi-title .label.notice:hover {
+ opacity: initial;
+}
+
+[data-page="admin-status-processes"] table,
+[data-page="admin-status-processes"] .table,
+[data-page="admin-system-startup"] table,
+[data-page="admin-system-startup"] .table,
+[data-page="admin-system-opkg"] table,
+[data-page="admin-system-opkg"] .table {
+	border-spacing: 0;
+}
+
+[data-page="admin-status-processes"] tr:not(.cbi-section-table-titles):not(.cbi-section-table-descr):not(.placeholder):hover > td,
+[data-page="admin-status-processes"] .tr:not(.table-titles):not(.cbi-section-table-titles):not(.cbi-section-table-descr):not(.placeholder):hover > .td,
+[data-page="admin-system-startup"] tr:not(.cbi-section-table-titles):not(.cbi-section-table-descr):not(.placeholder):hover > td,
+[data-page="admin-system-startup"] .tr:not(.table-titles):not(.cbi-section-table-titles):not(.cbi-section-table-descr):not(.placeholder):hover > .td,
+[data-page="admin-system-opkg"] tr:not(.cbi-section-table-titles):not(.cbi-section-table-descr):not(.placeholder):hover > td,
+[data-page="admin-system-opkg"] .tr:not(.table-titles):not(.cbi-section-table-titles):not(.cbi-section-table-descr):not(.placeholder):hover > .td {
+	background: var(--hover-row-color);
+}
+
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.cbi-button:focus-visible,
+.cbi-tabmenu a:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+	outline: 2px solid var(--main-bright-color);
+	outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		color-scheme: dark;
+		--page-bg: #171b21;
+		--page-text: #dde1e4;
+		--surface-color: #232932;
+		--table-background-color: #1f252d;
+		--hover-row-color: rgba(255, 255, 255, .06);
+		--glass-border: rgba(255, 255, 255, .10);
+		--glass-shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 28px -14px rgba(0, 0, 0, .6);
+		--glow-1: rgba(80, 130, 200, .16);
+		--glow-2: rgba(130, 100, 210, .12);
+		--zone-border: rgba(255, 255, 255, .14);
+		--zone-sheen: rgba(20, 25, 32, .55);
+		--badge-gloss: rgba(255, 255, 255, .08);
+		--pb-track: rgba(0, 0, 0, .22);
+		--pb-text: #f2f5f7;
+		--pb-halo: rgba(0, 0, 0, .65);
+		--pb-shadow: inset 0 1px 3px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(0, 0, 0, .18), 0 1px 0 rgba(255, 255, 255, .05);
+	}
+
+	code, var,
+	.cbi-tabmenu,
+	.cbi-dropdown.btn > ul.dropdown > li {
+		color: #c5ccd0;
+	}
+
+	.cbi-tabmenu > .cbi-tab > a {
+		color: #fff;
+	}
+
+	input[type="text"]:focus,
+	input[type="password"]:focus,
+	input:not([type]):focus,
+	select:focus,
+	textarea:focus,
+	.cbi-dropdown[open]:not(.btn):not(.cbi-button) {
+		border-color: var(--main-bright-color);
+	}
+
+	.cbi-input-invalid,
+	.cbi-input-invalid:focus {
+		color: #e88a94;
+	}
+
+	.cbi-dropdown[open] > ul.dropdown > li,
+	.cbi-dropdown:not(.btn):not(.cbi-button) > ul > li {
+		border-color: rgba(255, 255, 255, .15);
+	}
+
+	.uci-change-list var,
+	.uci-change-legend-label var {
+		border-color: #4a525c;
+		background: #2b323c;
+	}
+
+	.uci-change-list del,
+	.uci-change-legend-label del {
+		border-color: #b94452;
+		background: #4a2a2f;
+	}
+
+	.uci-change-list ins,
+	.uci-change-legend-label ins {
+		background: #27402b;
+	}
+
+	.cbi-dynlist > .add-item > .cbi-input-text.drag-over,
+	.cbi-dynlist > .item {
+		border-color: rgba(255, 255, 255, .2);
+	}
+
+	#modal_overlay > .modal {
+		box-shadow: 0 0 0 1px #3a424d, 0 8px 24px rgba(0, 0, 0, .6);
 	}
 }

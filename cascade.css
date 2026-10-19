@@ -8,18 +8,7 @@
 	--success-color: #ADD0AD;
 	--regular-font: "GalanoGrotesqueW00-Regular";
 	--base-font-size: 16px;
-	--table-background-color: #f1f2f3;
-	--page-bg: #fafafa;
-	--page-text: #333;
-	--surface-color: #fafafa;
-	--hover-row-color: rgba(56, 64, 76, .07);
-	--glass-border: rgba(56, 64, 76, .14);
-	--glass-shadow: 0 1px 2px rgba(20, 30, 50, .05), 0 12px 28px -14px rgba(20, 30, 50, .18);
-	--glow-1: rgba(80, 130, 200, .14);
-	--glow-2: rgba(130, 100, 210, .10);
-	--zone-border: rgba(0, 0, 0, .08);
-	--zone-sheen: rgba(255, 255, 255, .55);
-	--badge-gloss: rgba(255, 255, 255, .55);
+	--table-background-color: #f5f5f5;
 	--pb-track: rgba(56, 64, 76, .13);
 	--pb-fill: var(--main-bright-color);
 	--pb-text: #1d2a36;
@@ -71,12 +60,8 @@ html {
 }
 
 body {
-	background:
-		radial-gradient(60rem 40rem at 85% -10%, var(--glow-1), transparent 60%),
-		radial-gradient(50rem 35rem at -10% 110%, var(--glow-2), transparent 60%),
-		var(--page-bg);
-	background-attachment: fixed;
-	color: var(--page-text);
+	background: var(--secondary-bright-color);
+	color: var(--secondary-dark-color);
 	font-size: var(--base-font-size);
 	cursor: default;
 	display: inline-flex;
@@ -141,7 +126,7 @@ abbr[title], acronym[title] {
 	line-height: 1.5em;
 	padding: 0 .5em;
 	margin: .125em;
-	border-radius: 1em;
+	border-radius: var(--field-radius) !important;
 	cursor: pointer;
 	white-space: nowrap;
 }
@@ -233,7 +218,7 @@ abbr[title], acronym[title] {
 #mainmenu ul:not(.active) > li.selected > ul,
 #mainmenu li.active > ul {
 	max-height: 3000px;
-	transition: max-height .3s ease-in-out;
+	transition: max-height 1s ease-in-out;
 	margin: 0 0 .5em 1.5em;
 }
 
@@ -968,10 +953,10 @@ body.modal-overlay-active #modal_overlay {
 	max-width: 1300px;
 	width: 80%;
 	margin: 10% auto 5rem auto;
-	background: var(--surface-color);
+	background: var(--secondary-bright-color);
 	box-shadow: 0 0 3px 1px var(--main-bright-color);
 	padding: .5em;
-	border-radius: 1em;
+	border-radius: .6em;
 	display: flex;
 	flex-direction: column;
 }
@@ -981,7 +966,7 @@ body.modal-overlay-active #modal_overlay {
 	margin: -.5rem -.5rem .5rem -.5rem;
 	background: var(--main-bright-color);
 	color: var(--secondary-bright-color);
-	border-radius: 1em 1em 0 0;
+	border-radius: .6rem .6rem 0 0;
 }
 
 .modal > *:first-child:last-child {
@@ -1087,14 +1072,12 @@ tr.placeholder > td {
   position: relative;
   display: table;
 	margin: 0 0 1rem 0;
-	border: 1px solid var(--glass-border);
-	border-radius: 1em;
-	background: color-mix(in srgb, var(--table-background-color) 70%, transparent);
-	-webkit-backdrop-filter: blur(12px) saturate(140%);
-	backdrop-filter: blur(12px) saturate(140%);
+	border:  1px solid var(--main-bright-color);
+	border-radius: .50em;
+	background: var(--table-background-color);
    width: 100%;
 	font-size: 90%;
-	box-shadow: var(--glass-shadow);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 .tr {
   display: table-row;
@@ -1397,7 +1380,7 @@ pre {
 	font-size: .9rem;
 	box-shadow: inset 0 0 2px var(--main-dark-color);
 	padding: .5rem .75rem;
-	border-radius: var(--field-radius);
+	border-radius: var(--field-radius) !important;
 	overflow: auto;
 }
 
@@ -1428,51 +1411,22 @@ p > a {
 .ifacebox, .ifacebadge, .zonebadge {
 	display: inline-flex;
 	line-height: 1.8em;
+	padding: 0 .25em;
 	margin: .25em;
+	border:  1px solid var(--main-bright-color);
 	font-size: .9em;
-	/* nicht hidden: sonst wird der absolut positionierte .cbi-tooltip abgeschnitten */
-	overflow: visible;
+	border-radius: var(--field-radius) !important;
+	overflow: hidden;
 	font-size: .8rem;
 	vertical-align: text-top;
-	background: var(--surface-color);
+	background: var(--secondary-bright-color);
 	align-items: center;
-	vertical-align: middle;
-}
-
-.ifacebox, .ifacebadge {
 	color: var(--secondary-dark-color);
-}
-
-.zonebadge {
-	position: relative;
-	padding: 0 .8em 0 1.7em;
-	border: 1px solid var(--zone-border);
-	border-radius: 999px;
-	/* die per JS gesetzte Zonenfarbe bleibt, wird nur aufgehellt = durchscheinender Farbton */
-	background-image: linear-gradient(var(--zone-sheen), var(--zone-sheen));
-	color: var(--page-text);
-}
-
-/* Statuspunkt in kräftiger Variante der Zonenfarbe */
-.zonebadge::before {
-	content: "";
-	position: absolute;
-	left: .75em;
-	top: 50%;
-	width: .5em;
-	height: .5em;
-	margin-top: -.25em;
-	border-radius: 50%;
-	background: inherit;
-	background-image: none;
-	filter: saturate(2.4) brightness(.72);
+	vertical-align: middle;
 }
 
 .zonebadge > .ifacebadge {
 	margin: .125em -.125em .125em .35em;
-	padding: 0 .25em;
-	border-radius: .5em;
-	background-image: none;
 }
 
 .zonebadge > .ifacebadge > img
@@ -1487,32 +1441,13 @@ p > a {
 	text-align: center;
 	width: 100%;
 	max-width: 150px;
-	border: 1px solid var(--glass-border);
-	border-radius: 1em;
-	background: color-mix(in srgb, var(--table-background-color) 70%, transparent);
-	-webkit-backdrop-filter: blur(12px) saturate(140%);
-	backdrop-filter: blur(12px) saturate(140%);
-	box-shadow: var(--glass-shadow);
+	background: var(--table-background-color);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .ifacebox-head {
 	background: var(--main-bright-color);
 	width: 100%;
-	/* Ersatz für das frühere overflow:hidden der Box: Kopfzeile folgt den runden Ecken */
-	border-radius: calc(1em - 1px) calc(1em - 1px) 0 0;
-}
-
-/* Box ohne Inhalt unter der Kopfzeile (Firewall-Zonen im Ports-Status-Widget): alle Ecken rund */
-.ifacebox-head:only-child {
-	border-radius: calc(1em - 1px);
-}
-
-/* backdrop-filter erzeugt einen eigenen Stacking-Context: Box mit Tooltip über die Nachbarn heben */
-.ifacebox:hover,
-.ifacebadge:hover,
-.zonebadge:hover {
-	position: relative;
-	z-index: 20;
 }
 
 .ifacebox-body {
@@ -1521,20 +1456,14 @@ p > a {
 	white-space: nowrap;
 }
 
-/* Boxen, die ihre Breite inline anfordern (z. B. Crontab-Konfigurator im Grid):
-   das 150px-Limit gilt dort nicht */
 .ifacebox[style*="width:100%"] {
 	max-width: none;
 }
 
-/* Nur Körper mit Formularfeldern füllen die Box (sonst schrumpft der Körper auf den
-   Inhalt und das Feld wäre nur so breit wie er). Reine Textkörper bleiben zentriert. */
 .ifacebox-body:has(select, input:not([type="checkbox"]):not([type="radio"])) {
 	align-self: stretch;
 }
 
-/* Formularfelder in der Box füllen die Box, statt ihre 20rem Mindestbreite mitzubringen.
-   Seit die Box overflow: visible hat, würden sie sonst herausragen. */
 .ifacebox-body select,
 .ifacebox-body input:not([type="checkbox"]):not([type="radio"]),
 .ifacebox-body .cbi-dropdown:not(.btn):not(.cbi-button) {
@@ -1551,11 +1480,7 @@ p > a {
 .ifacebadge {
 	display: inline-flex;
 	align-items: center;
-	padding: .1em 1em;
-	border: 1px solid var(--main-bright-color);
-	border-radius: .8em;
-	background: var(--surface-color);
-	background-image: linear-gradient(180deg, var(--badge-gloss), rgba(255, 255, 255, 0) 80%);
+	background: var(--secondary-bright-color);
 }
 
 .ifacebadge.large {
@@ -1609,7 +1534,7 @@ p > a {
 	z-index: 10000;
 	left: -10000px;
 	box-shadow: 0 0 2px rgba(0, 0, 0, .7);
-	border-radius: 8px;
+	border-radius: var(--field-radius) !important;
 	border: 1px solid var(--tooltip-border);
 	background: var(--tooltip-bg);
 	color: var(--tooltip-text);
@@ -1647,9 +1572,9 @@ p > a {
    daher !important. Gematcht wird über die Struktur, nicht über den Style-Text. */
 div:has(> img[data-iface]),
 div[data-plugin] > div:has(> img) {
-	border: 1px solid var(--glass-border) !important;
-	border-radius: 1em !important;
-	box-shadow: var(--glass-shadow) !important;
+	border: 1px solid var(--main-bright-color) !important;
+	border-radius: var(--field-radius) !important;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
 .cbi-progressbar {
@@ -1845,7 +1770,7 @@ div[data-plugin] > div:has(> img) {
 /* Echtzeit-Diagramme: der Container hat Inline-Styles (border:1px solid #000),
    daher !important nötig. overflow:hidden schneidet das SVG an den Ecken ab. */
 div[style*="border:1px solid #000"] {
-	border-radius: 1em !important;
+	border-radius: var(--field-radius) !important;
 	overflow: hidden !important;
 }
 
@@ -1877,12 +1802,9 @@ button:hover, .btn:hover {
 	color: white;
 }
 
-/* Form, Glanz und Hover/Klick-Verhalten der Buttons. Dropdown-Buttons haben
-   eine eigene Regel (.cbi-dropdown.btn), damit sich die aufgeklappte Liste
-   beim Hover nicht verschiebt. */
 :is(button, .btn, .cbi-button):not(.cbi-dropdown) {
 	border-radius: 1.25em;
-	padding: .15em 1.15em;
+	padding: 0 1.15em;
 	background-image: linear-gradient(180deg, rgba(255, 255, 255, .20), rgba(255, 255, 255, 0) 70%);
 	transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
 }
@@ -1997,7 +1919,7 @@ select,
 	line-height: 1.5rem;
 	min-height: calc(1.5rem + 2px);
 	min-width: 20rem;
-	border-radius: var(--field-radius);
+	border-radius: var(--field-radius) !important;
 }
 
 input[type="number"],
@@ -2005,7 +1927,7 @@ input[type="email"],
 input[type="url"],
 input[type="tel"],
 input[type="search"] {
-	border-radius: var(--field-radius);
+	border-radius: var(--field-radius) !important;
 }
 
 input:not([type]):focus,
@@ -2053,10 +1975,6 @@ input[type="checkbox"] {
 	-webkit-appearance: checkbox;
 }
 
-/* Native Selects und JS-Dropdowns (.cbi-dropdown) teilen sich Innenabstand,
-   Höhe und denselben gezeichneten Pfeil (currentColor, passt sich Hell/Dunkel an).
-   Beim JS-Dropdown ist das die .open-Spalte (2rem breit = padding-right des Selects),
-   das Textzeichen darin wird ausgeblendet. */
 select {
 	padding: 0 2rem 0 .5em;
 	cursor: pointer;
@@ -2081,7 +1999,6 @@ select,
 	font-size: 0;
 }
 
-/* Mehrfachauswahl und Listen-Selects behalten das native Aussehen */
 select[multiple],
 select[size]:not([size="1"]) {
 	-webkit-appearance: auto;
@@ -2096,16 +2013,12 @@ select[disabled] {
 	cursor: default;
 }
 
-/* Aufgeklappte Liste des nativen Selects: wie die Liste der JS-Dropdowns.
-   appearance: base-select (Chrome/Edge ab 135) macht Button und Liste stylebar.
-   Browser ohne Unterstützung überspringen den Block und zeigen die native Liste. */
 @supports (appearance: base-select) {
 	select:not([multiple], [size]:not([size="1"])),
 	select:not([multiple], [size]:not([size="1"]))::picker(select) {
 		appearance: base-select;
 	}
 
-	/* der Pfeil wird weiter oben per Hintergrund gezeichnet, nicht der des Browsers */
 	select::picker-icon {
 		display: none;
 	}
@@ -2159,7 +2072,7 @@ textarea {
 	font-family: monospace;
 	font-size: .9rem;
 	padding: .35rem .5rem;
-	border-radius: var(--field-radius);
+	border-radius: var(--field-radius) !important;
 }
 
 textarea:focus {
@@ -2249,7 +2162,7 @@ textarea:focus {
 	box-shadow: 0 0 2px var(--main-dark-color);
 	margin: .3em 0;
 	padding: .15em 2em .15em .8em;
-	border-radius: var(--field-radius);
+	border-radius: var(--field-radius) !important;
 	position: relative;
 	overflow: hidden;
 	transition: box-shadow .25s ease-in-out;
@@ -2335,7 +2248,7 @@ textarea:focus {
 	height: auto;
 	position: relative;
 	padding: 0 !important;
-	border-radius: var(--field-radius);
+	border-radius: var(--field-radius) !important;
 }
 
 .cbi-dropdown:not(.btn):not(.cbi-button) {
@@ -2374,7 +2287,7 @@ textarea:focus {
 	overflow-y: auto;
 	display: flex;
 	width: 100%;
-	border-radius: var(--field-radius);
+	border-radius: var(--field-radius) !important;
 }
 
 .cbi-dropdown.btn > ul:not(.dropdown) {
@@ -2462,7 +2375,7 @@ textarea:focus {
 .cbi-dropdown > ul > li input[type="text"] {
 	margin: .25em 0;
 	border: none;
-	background: var(--surface-color);
+	background: var(--secondary-bright-color);
 }
 
 .cbi-dropdown[open] {
@@ -2471,7 +2384,7 @@ textarea:focus {
 
 .cbi-dropdown[open] > ul.dropdown {
 	display: block;
-	background: var(--surface-color);
+	background: #fff;
 	box-shadow: 0 0 1px var(--main-dark-color), 0 0 4px rgba(0, 0, 0, .7);
 	position: absolute;
 	z-index: 1100;
@@ -2537,7 +2450,7 @@ textarea:focus {
 	max-width: 100%;
 	width: 1px;
 	box-shadow: 0 0 2px var(--main-dark-color);
-	border-radius: var(--field-radius);
+	border-radius: var(--field-radius) !important;
 	display: flex;
 	flex-direction: column;
 	opacity: 0;
@@ -2662,7 +2575,7 @@ iframe[id$="sf"] {
 	content: attr(data-errors);
 	background: var(--danger-color);
 	color: var(--secondary-bright-color);
-	border-radius: .6rem;
+	border-radius: var(--field-radius) !important;
 	height: 1.1rem;
 	padding: 0 .25rem;
 	font-size: .9rem;
@@ -2722,7 +2635,7 @@ button.spinning::before, .btn.spinning::before {
 	color: var(--secondary-bright-color);
 	font-size: .8rem;
 	padding: 0 .4rem;
-	border-radius: .5rem;
+	border-radius: var(--field-radius) !important;
 }
 
 .label.warning {
@@ -2773,7 +2686,7 @@ ul.errors {
 		display: block;
 		border: 2px solid var(--secondary-bright-color);
 		color: var(--secondary-bright-color);
-		border-radius: .5em;
+		border-radius: var(--field-radius) !important;
 		cursor: pointer;
 		font-size: 100%;
 		margin: 0 1em 0 0;
@@ -2913,7 +2826,7 @@ ul.errors {
 		top: 0;
 		bottom: 0;
 		display: block;
-		background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--page-bg) 90%);
+		background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--secondary-bright-color) 90%);
 	}
 
 	[data-page="admin-status-overview"] .cbi-section:nth-of-type(1) td:first-of-type,
@@ -3024,6 +2937,10 @@ ul.errors {
 	button, .btn {
 		line-height: 1.8rem;
 		font-size: 1.2rem;
+	}
+
+	select {
+		padding: .4em 0;
 	}
 
 	.cbi-value > .cbi-value-field {

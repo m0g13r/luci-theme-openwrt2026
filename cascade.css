@@ -25,6 +25,10 @@
 	--pb-text: #1d2a36;
 	--pb-halo: rgba(255, 255, 255, .85);
 	--pb-shadow: inset 0 1px 3px rgba(0, 0, 0, .2), inset 0 0 0 1px rgba(0, 0, 0, .05), 0 1px 0 rgba(255, 255, 255, .55);
+	--field-radius: .6em;
+	--tooltip-bg: rgba(255, 255, 255, .85);
+	--tooltip-text: #2b333d;
+	--tooltip-border: rgba(56, 64, 76, .18);
 }
 
 @font-face {
@@ -967,7 +971,7 @@ body.modal-overlay-active #modal_overlay {
 	background: var(--surface-color);
 	box-shadow: 0 0 3px 1px var(--main-bright-color);
 	padding: .5em;
-	border-radius: .25em;
+	border-radius: 1em;
 	display: flex;
 	flex-direction: column;
 }
@@ -977,7 +981,7 @@ body.modal-overlay-active #modal_overlay {
 	margin: -.5rem -.5rem .5rem -.5rem;
 	background: var(--main-bright-color);
 	color: var(--secondary-bright-color);
-	border-radius: .25rem .25rem 0 0;
+	border-radius: 1em 1em 0 0;
 }
 
 .modal > *:first-child:last-child {
@@ -1392,7 +1396,8 @@ pre {
 	margin: 0 0 1em 0;
 	font-size: .9rem;
 	box-shadow: inset 0 0 2px var(--main-dark-color);
-	padding: .25rem;
+	padding: .5rem .75rem;
+	border-radius: var(--field-radius);
 	overflow: auto;
 }
 
@@ -1425,7 +1430,8 @@ p > a {
 	line-height: 1.8em;
 	margin: .25em;
 	font-size: .9em;
-	overflow: hidden;
+	/* nicht hidden: sonst wird der absolut positionierte .cbi-tooltip abgeschnitten */
+	overflow: visible;
 	font-size: .8rem;
 	vertical-align: text-top;
 	background: var(--surface-color);
@@ -1492,12 +1498,49 @@ p > a {
 .ifacebox-head {
 	background: var(--main-bright-color);
 	width: 100%;
+	/* Ersatz für das frühere overflow:hidden der Box: Kopfzeile folgt den runden Ecken */
+	border-radius: calc(1em - 1px) calc(1em - 1px) 0 0;
+}
+
+/* Box ohne Inhalt unter der Kopfzeile (Firewall-Zonen im Ports-Status-Widget): alle Ecken rund */
+.ifacebox-head:only-child {
+	border-radius: calc(1em - 1px);
+}
+
+/* backdrop-filter erzeugt einen eigenen Stacking-Context: Box mit Tooltip über die Nachbarn heben */
+.ifacebox:hover,
+.ifacebadge:hover,
+.zonebadge:hover {
+	position: relative;
+	z-index: 20;
 }
 
 .ifacebox-body {
 	text-align: center;
 	padding: .3em .25em .25em .25em;
 	white-space: nowrap;
+}
+
+/* Boxen, die ihre Breite inline anfordern (z. B. Crontab-Konfigurator im Grid):
+   das 150px-Limit gilt dort nicht */
+.ifacebox[style*="width:100%"] {
+	max-width: none;
+}
+
+/* Nur Körper mit Formularfeldern füllen die Box (sonst schrumpft der Körper auf den
+   Inhalt und das Feld wäre nur so breit wie er). Reine Textkörper bleiben zentriert. */
+.ifacebox-body:has(select, input:not([type="checkbox"]):not([type="radio"])) {
+	align-self: stretch;
+}
+
+/* Formularfelder in der Box füllen die Box, statt ihre 20rem Mindestbreite mitzubringen.
+   Seit die Box overflow: visible hat, würden sie sonst herausragen. */
+.ifacebox-body select,
+.ifacebox-body input:not([type="checkbox"]):not([type="radio"]),
+.ifacebox-body .cbi-dropdown:not(.btn):not(.cbi-button) {
+	width: 100%;
+	min-width: 0;
+	max-width: 100%;
 }
 
 #cbi-network-interface .ifacebox img {
@@ -1567,9 +1610,9 @@ p > a {
 	left: -10000px;
 	box-shadow: 0 0 2px rgba(0, 0, 0, .7);
 	border-radius: 8px;
-	border: 1px solid rgba(56, 64, 76, .22);
-	border-color: rgba(56, 64, 76, .22);
-	background: rgba(250, 250, 250, .38);
+	border: 1px solid var(--tooltip-border);
+	background: var(--tooltip-bg);
+	color: var(--tooltip-text);
 	-webkit-backdrop-filter: blur(8px);
 	backdrop-filter: blur(8px);
 	white-space: pre;
@@ -1626,9 +1669,26 @@ div[data-plugin] > div:has(> img) {
 	height: 100%;
 	transition: width .25s ease-in-out;
 	width: 0%;
+	/* mindestens so breit wie hoch (= Balkenhöhe), sonst wird der Radius bei kleinen
+	   Werten (1 %) heruntergerechnet und das Ende ist nicht rund */
+	min-width: 1rem;
 	max-width: 100%;
 	border-radius: 999px;
 	margin: 0;
+}
+
+/* Zeigt das Label 0 % (auch wenn der Wert nur auf 0 gerundet ist, z. B. 0,39 %),
+   wird gar nichts gezeichnet. Das Label steht im title: "… (0%)" bzw. "0%". */
+.cbi-progressbar[title="0%"] > div,
+.cbi-progressbar[title$="(0%)"] > div {
+	display: none;
+}
+
+.cbi-progressbar > div[style*="width:0%"],
+.cbi-progressbar > div[style*="width: 0%"],
+.cbi-progressbar > div[style*="width:0;"],
+.cbi-progressbar > div[style*="width: 0;"] {
+	min-width: 0;
 }
 
 /* Text: exakt mittig (horizontal und vertikal) */
@@ -1782,6 +1842,13 @@ div[data-plugin] > div:has(> img) {
 	opacity: 0;
 }
 
+/* Echtzeit-Diagramme: der Container hat Inline-Styles (border:1px solid #000),
+   daher !important nötig. overflow:hidden schneidet das SVG an den Ecken ab. */
+div[style*="border:1px solid #000"] {
+	border-radius: 1em !important;
+	overflow: hidden !important;
+}
+
 /*
  * forms
  */
@@ -1926,11 +1993,19 @@ select,
 .cbi-dropdown:not(.btn):not(.cbi-button) {
 	border-bottom: 2px solid transparent;
 	box-shadow: inset 0 0 1px var(--main-dark-color);
-	padding: 0 .2rem;
+	padding: 0 .5rem;
 	line-height: 1.5rem;
 	min-height: calc(1.5rem + 2px);
 	min-width: 20rem;
-	border-radius: .25em;
+	border-radius: var(--field-radius);
+}
+
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="search"] {
+	border-radius: var(--field-radius);
 }
 
 input:not([type]):focus,
@@ -1959,7 +2034,7 @@ input[type="text"] + .btn, input[type="text"] + button,
 input[type="password"] + .btn, input[type="password"] + button {
 	margin: 0 0 2px -1px;
 	background: var(--main-dark-color);
-	border-radius: 0 .25em .25em 0;
+	border-radius: 0 var(--field-radius) var(--field-radius) 0;
 }
 
 .control-group > select + .btn, .control-group > select + button {
@@ -1978,10 +2053,104 @@ input[type="checkbox"] {
 	-webkit-appearance: checkbox;
 }
 
+/* Native Selects und JS-Dropdowns (.cbi-dropdown) teilen sich Innenabstand,
+   Höhe und denselben gezeichneten Pfeil (currentColor, passt sich Hell/Dunkel an).
+   Beim JS-Dropdown ist das die .open-Spalte (2rem breit = padding-right des Selects),
+   das Textzeichen darin wird ausgeblendet. */
 select {
-	padding: .1rem 0;
-	-webkit-appearance: menulist; /* nonstandard, should remove in future */
-	appearance: menulist;
+	padding: 0 2rem 0 .5em;
+	cursor: pointer;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+select,
+.cbi-dropdown:not(.btn):not(.cbi-button) > .open {
+	background-image:
+		linear-gradient(45deg, transparent 50%, currentColor 50%),
+		linear-gradient(135deg, currentColor 50%, transparent 50%);
+	background-position: calc(100% - 1rem) 50%, calc(100% - .65rem) 50%;
+	background-size: .4rem .4rem, .4rem .4rem;
+	background-repeat: no-repeat;
+}
+
+.cbi-dropdown:not(.btn):not(.cbi-button) > .open {
+	flex: 0 0 2rem;
+	padding: 0;
+	font-size: 0;
+}
+
+/* Mehrfachauswahl und Listen-Selects behalten das native Aussehen */
+select[multiple],
+select[size]:not([size="1"]) {
+	-webkit-appearance: auto;
+	-moz-appearance: auto;
+	appearance: auto;
+	background-image: none;
+	padding: .1rem .5em;
+	cursor: default;
+}
+
+select[disabled] {
+	cursor: default;
+}
+
+/* Aufgeklappte Liste des nativen Selects: wie die Liste der JS-Dropdowns.
+   appearance: base-select (Chrome/Edge ab 135) macht Button und Liste stylebar.
+   Browser ohne Unterstützung überspringen den Block und zeigen die native Liste. */
+@supports (appearance: base-select) {
+	select:not([multiple], [size]:not([size="1"])),
+	select:not([multiple], [size]:not([size="1"]))::picker(select) {
+		appearance: base-select;
+	}
+
+	/* der Pfeil wird weiter oben per Hintergrund gezeichnet, nicht der des Browsers */
+	select::picker-icon {
+		display: none;
+	}
+
+	select::picker(select) {
+		margin-top: .25em;
+		padding: 0;
+		border: none;
+		border-radius: .75em;
+		overflow: hidden;
+		background: var(--surface-color);
+		color: var(--page-text);
+		box-shadow: 0 0 1px var(--main-dark-color), 0 0 4px rgba(0, 0, 0, .7);
+	}
+
+	select option {
+		display: flex;
+		align-items: center;
+		padding: 0 .5em;
+		cursor: pointer;
+		border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+	}
+
+	select option::checkmark {
+		display: none;
+	}
+
+	select option:last-child {
+		border-bottom: none;
+	}
+
+	select option:checked {
+		background: var(--main-dark-color);
+		color: var(--secondary-bright-color);
+	}
+
+	select option:hover,
+	select option:focus-visible {
+		background: var(--main-bright-color);
+	}
+
+	select option:disabled {
+		opacity: .7;
+		cursor: default;
+	}
 }
 
 textarea {
@@ -1989,8 +2158,8 @@ textarea {
 	box-shadow: inset 0 0 2px var(--main-dark-color);
 	font-family: monospace;
 	font-size: .9rem;
-	padding: .2rem;
-	border-radius: .25rem;
+	padding: .35rem .5rem;
+	border-radius: var(--field-radius);
 }
 
 textarea:focus {
@@ -2079,8 +2248,8 @@ textarea:focus {
 .cbi-dynlist > .item {
 	box-shadow: 0 0 2px var(--main-dark-color);
 	margin: .3em 0;
-	padding: .15em 2em .15em .2em;
-	border-radius: .25em;
+	padding: .15em 2em .15em .8em;
+	border-radius: var(--field-radius);
 	position: relative;
 	overflow: hidden;
 	transition: box-shadow .25s ease-in-out;
@@ -2149,7 +2318,7 @@ textarea:focus {
 .cbi-dynlist > .add-item > input {
 	flex: 1;
 	min-width: 18.5rem;
-	border-radius: .25rem 0 0 .25rem;
+	border-radius: var(--field-radius) 0 0 var(--field-radius);
 }
 
 .cbi-dynlist > .add-item > .btn {
@@ -2166,7 +2335,7 @@ textarea:focus {
 	height: auto;
 	position: relative;
 	padding: 0 !important;
-	border-radius: .75rem;
+	border-radius: var(--field-radius);
 }
 
 .cbi-dropdown:not(.btn):not(.cbi-button) {
@@ -2205,7 +2374,7 @@ textarea:focus {
 	overflow-y: auto;
 	display: flex;
 	width: 100%;
-	border-radius: .25rem;
+	border-radius: var(--field-radius);
 }
 
 .cbi-dropdown.btn > ul:not(.dropdown) {
@@ -2263,7 +2432,7 @@ textarea:focus {
 
 .cbi-dropdown > ul.dropdown > li,
 .cbi-dropdown:not(.btn):not(.cbi-button) > ul > li {
-	padding: 0 .25em;
+	padding: 0 .5em;
 }
 
 .cbi-dropdown > ul > li .hide-open { display: block; display: initial; }
@@ -2368,7 +2537,7 @@ textarea:focus {
 	max-width: 100%;
 	width: 1px;
 	box-shadow: 0 0 2px var(--main-dark-color);
-	border-radius: .25rem;
+	border-radius: var(--field-radius);
 	display: flex;
 	flex-direction: column;
 	opacity: 0;
@@ -2466,7 +2635,7 @@ textarea:focus {
 div[id$=".ipaddr"] > input,
 .cbi-value-field > div > input[type="password"] {
 	min-width: 18.5rem;
-	border-radius: .25rem 0 0 .25rem;
+	border-radius: var(--field-radius) 0 0 var(--field-radius);
 }
 
 div[id$=".txpower"] {
@@ -2857,10 +3026,6 @@ ul.errors {
 		font-size: 1.2rem;
 	}
 
-	select {
-		padding: .4em 0;
-	}
-
 	.cbi-value > .cbi-value-field {
 		flex: 1 0 100%;
 		display: flex;
@@ -3017,6 +3182,9 @@ summary:focus-visible,
 		--pb-text: #f2f5f7;
 		--pb-halo: rgba(0, 0, 0, .65);
 		--pb-shadow: inset 0 1px 3px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(0, 0, 0, .18), 0 1px 0 rgba(255, 255, 255, .05);
+		--tooltip-bg: rgba(62, 72, 87, .85);
+		--tooltip-text: #f2f4f7;
+		--tooltip-border: rgba(255, 255, 255, .22);
 	}
 
 	code, var,

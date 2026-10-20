@@ -18,9 +18,9 @@
 	--pb-halo: rgba(255, 255, 255, .85);
 	--pb-shadow: inset 0 1px 3px rgba(0, 0, 0, .2), inset 0 0 0 1px rgba(0, 0, 0, .05), 0 1px 0 rgba(255, 255, 255, .55);
 	--field-radius: .6em;
-	--tooltip-bg: rgba(255, 255, 255, .85);
+	--tooltip-bg: rgba(255, 255, 255, .80);
 	--tooltip-text: #2b333d;
-	--tooltip-border: rgba(56, 64, 76, .18);
+	--tooltip-border: rgba(56, 64, 76, .20);
 }
 
 @font-face {
@@ -1541,8 +1541,8 @@ p > a {
 	border: 1px solid var(--tooltip-border);
 	background: var(--tooltip-bg);
 	color: var(--tooltip-text);
-	-webkit-backdrop-filter: blur(8px);
-	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
 	white-space: pre;
 	padding: 2px 5px;
 	opacity: 0;
@@ -3118,9 +3118,9 @@ summary:focus-visible,
 		--pb-text: #f2f5f7;
 		--pb-halo: rgba(0, 0, 0, .65);
 		--pb-shadow: inset 0 1px 3px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(0, 0, 0, .18), 0 1px 0 rgba(255, 255, 255, .05);
-		--tooltip-bg: rgba(62, 72, 87, .85);
+		--tooltip-bg: rgba(62, 72, 87, .80);
 		--tooltip-text: #f2f4f7;
-		--tooltip-border: rgba(255, 255, 255, .22);
+		--tooltip-border: rgba(255, 255, 255, .20);
 	}
 
 	code, var,

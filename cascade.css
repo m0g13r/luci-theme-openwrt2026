@@ -876,6 +876,14 @@ abbr[title], acronym[title] {
 	--menu-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='3' x2='5' y2='17'/%3E%3Ccircle cx='5' cy='8' r='1.5' fill='currentColor' stroke='none'/%3E%3Cline x1='10' y1='3' x2='10' y2='17'/%3E%3Ccircle cx='10' cy='13' r='1.5' fill='currentColor' stroke='none'/%3E%3Cline x1='15' y1='3' x2='15' y2='17'/%3E%3Ccircle cx='15' cy='6' r='1.5' fill='currentColor' stroke='none'/%3E%3C/svg%3E");
 }
 
+#mainmenu a[href*="admin/network/wg-peer-gen"] {
+	--menu-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='8' cy='7' r='3'/%3E%3Cpath d='M2.5 17c0-3 2.5-5 5.5-5s5.5 2 5.5 5'/%3E%3Cpath d='M16 4v6M13 7h6'/%3E%3C/svg%3E");
+}
+
+#mainmenu a[href*="admin/network/traffic_chart"] {
+	--menu-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='currentColor' stroke-width='3'%3E%3Ccircle cx='10' cy='10' r='6' stroke-opacity='.3'/%3E%3Cpath d='M10 4A6 6 0 1 1 4.29 11.85'/%3E%3C/svg%3E");
+}
+
 /* DAWN – Unterpunkte */
 #mainmenu a[href*="admin/dawn/view_network"] {
 	--menu-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='currentColor' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='5' cy='5' r='2'/%3E%3Ccircle cx='15' cy='5' r='2'/%3E%3Ccircle cx='10' cy='15' r='2'/%3E%3Cline x1='6.5' y1='6.5' x2='9' y2='13'/%3E%3Cline x1='13.5' y1='6.5' x2='11' y2='13'/%3E%3C/svg%3E");
